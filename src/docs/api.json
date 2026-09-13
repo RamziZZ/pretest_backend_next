@@ -1,0 +1,462 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Project Backend API",
+    "description": "REST API untuk aplikasi backend menggunakan Next.js, Prisma, dan MySQL.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Server Development"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Products",
+      "description": "API untuk mengelola data product"
+    }
+  ],
+  "paths": {
+    "/api/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Mengambil semua product",
+        "description": "Mengambil seluruh data product dari database.",
+        "responses": {
+          "200": {
+            "description": "Berhasil mengambil semua product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                },
+                "example": [
+                  {
+                    "id": 4,
+                    "name": "Beras 5kg",
+                    "price": "75000",
+                    "stock": 10,
+                    "createdAt": "2026-09-13T16:01:58.654Z",
+                    "updatedAt": "2026-09-13T16:01:58.654Z"
+                  }
+                ]
+              }
+            }
+          },
+          "500": {
+            "description": "Gagal mengambil data product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Gagal mengambil data product"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Membuat product baru",
+        "description": "Menambahkan product baru ke database.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              },
+              "example": {
+                "name": "Beras 5kg",
+                "price": 75000,
+                "stock": 10
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product berhasil dibuat",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                },
+                "example": {
+                  "id": 1,
+                  "name": "Beras 5kg",
+                  "price": "75000",
+                  "stock": 10,
+                  "createdAt": "2026-09-13T16:01:58.654Z",
+                  "updatedAt": "2026-09-13T16:01:58.654Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Data tidak lengkap",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Name dan price wajib diisi"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Gagal membuat product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Gagal membuat product"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api/products/{id}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Mengambil satu product",
+        "description": "Mengambil data product berdasarkan ID.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProductId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                },
+                "example": {
+                  "id": 1,
+                  "name": "Beras 5kg",
+                  "price": "75000",
+                  "stock": 10,
+                  "createdAt": "2026-09-13T16:01:58.654Z",
+                  "updatedAt": "2026-09-13T16:01:58.654Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "ID tidak valid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Product tidak ditemukan"
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Mengupdate product",
+        "description": "Mengubah data product berdasarkan ID. Field yang dikirim dapat sebagian atau seluruhnya.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProductId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductRequest"
+              },
+              "example": {
+                "name": "Beras Premium 5kg",
+                "price": 85000,
+                "stock": 20
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product berhasil diupdate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                },
+                "example": {
+                  "id": 1,
+                  "name": "Beras Premium 5kg",
+                  "price": "85000",
+                  "stock": 20,
+                  "createdAt": "2026-09-13T16:01:58.654Z",
+                  "updatedAt": "2026-09-13T16:10:00.000Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "ID tidak valid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Product tidak ditemukan"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Gagal mengupdate product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Gagal mengupdate product"
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Menghapus product",
+        "description": "Menghapus product berdasarkan ID.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProductId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product berhasil dihapus",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                },
+                "example": {
+                  "message": "Product berhasil dihapus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ID tidak valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "ID tidak valid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product tidak ditemukan",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Product tidak ditemukan"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Gagal menghapus product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "message": "Gagal menghapus product"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "parameters": {
+      "ProductId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "ID product",
+        "schema": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Beras 5kg"
+          },
+          "price": {
+            "type": "string",
+            "example": "75000"
+          },
+          "stock": {
+            "type": "integer",
+            "example": 10
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-09-13T16:01:58.654Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-09-13T16:01:58.654Z"
+          }
+        }
+      },
+
+      "CreateProductRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "price"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Beras 5kg"
+          },
+          "price": {
+            "type": "number",
+            "example": 75000
+          },
+          "stock": {
+            "type": "integer",
+            "default": 0,
+            "example": 10
+          }
+        }
+      },
+
+      "UpdateProductRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Beras Premium 5kg"
+          },
+          "price": {
+            "type": "number",
+            "example": 85000
+          },
+          "stock": {
+            "type": "integer",
+            "example": 20
+          }
+        }
+      },
+
+      "DeleteResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Product berhasil dihapus"
+          }
+        }
+      },
+
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Terjadi kesalahan"
+          }
+        }
+      }
+    }
+  }
+}

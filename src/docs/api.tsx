@@ -157,7 +157,7 @@ export default function ApiDocsPage() {
           </div>
 
           <div className="mt-2 rounded-lg bg-slate-100 px-4 py-3 font-mono text-sm">
-            http://localhost:3000
+            http://localhost:3000/api
           </div>
         </section>
 
